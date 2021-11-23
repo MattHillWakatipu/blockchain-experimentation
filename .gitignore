@@ -14,8 +14,11 @@
 
 # production
 /build
+/contract/target/
+/dist/
 
 # intellij
+/.cache/
 /.idea/
 *.iml
 
