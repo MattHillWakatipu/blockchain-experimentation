@@ -139,10 +139,65 @@ SmartPy is a high-level smart contract language that enables developers to use P
 
 
 
+## Solana
 
+### Rust
 
+A highly praised general purpose programming language designed for performance and safety. Has a steep learning curve but is incredibly powerful.
 
+**Previous Experience :** Some
 
+**Difficulty:** Hard
+
+**Language Documentation:** Excellent
+
+**Blockchain Specific Documentation:** Minimal
+
+**Blockchain Example Code:** Minimal
+
+### C
+
+Classic C, provides low-level access to memory however is notoriously unsafe. Renowned for use in embedded systems.
+
+**Previous Experience :** Some
+
+**Difficulty:** Hard
+
+**Language Documentation:** Excellent
+
+**Blockchain Specific Documentation:** Minimal
+
+**Blockchain Example Code:** Minimal
+
+### C++
+
+Facilitates object-oriented and functional features while retaining ability for low-level memory manipulation. A notably high performance language.
+
+**Previous Experience :** Some
+
+**Difficulty:** Medium
+
+**Language Documentation:** Excellent
+
+**Blockchain Specific Documentation:** Minimal
+
+**Blockchain Example Code:** Minimal
+
+# Developer Environment
+
+| Blockchain    | Smart Contract Language |  Experience | Difficulty    | Language Documentation | Blockchain Specific Documentation | Blockchain Example Code | Heuristic Function |
+| :---          | :---:                   | :---:       | :---:         |:---:                   | :---:                             |:---:                    | :---:              |
+| NEAR Protocol | AssemblyScript          | None        | Easy          | Excellent              | Minimal                           | Minimal                 | 11                 |
+|               | Rust                    | Some        | Hard          | Excellent              | Decent                            | Decent                  | 12                 |
+| Polygon       | Solidity                | Some        | Medium        | Decent                 | Excellent                         | Excellent               | 14                 |
+|               | Vyper                   | None        | Medium        | Decent                 | Excellent                         | Excellent               | 13                 |
+| Solana        | C                       | Some        | Hard          | Excellent              | Minimal                           | Minimal                 | 10                 |
+|               | C++                     | Some        | Medium        | Excellent              | Minimal                           | Minimal                 | 11                 |
+|               | Rust                    | Some        | Hard          | Excellent              | Minimal                           | Minimal                 | 10                 |
+| Tezos         | Archetype               | Some        | Insane        | Minimal                | Minimal                           | Minimal                 | 6                  |
+|               | Ligo                    | None        | Hard          | Minimal                | Minimal                           | Minimal                 | 7                  |
+|               | Morley                  | Some        | Brutal        | Decent                 | Minimal                           | Minimal                 | 8                  |
+|               | SmartPy                 | Lots        | Easy          | Excellent              | Excellent                         | Excellent               | 18                 |
 
 
 ## Blockchain
@@ -151,24 +206,12 @@ SmartPy is a high-level smart contract language that enables developers to use P
 
 #### Contract language
 
-Previous Experience: None/Some/Decent/Lots
+Previous Experience: None/Some/Decent/Lots (1,2,3,4)
 
-Difficulty: Easy/Medium/Hard
+Difficulty: Easy/Medium/Hard/Brutal/Insane (5,4,3,2,1)
 
-Language Documentation: Minimal/Decent/Excellent
+Language Documentation: Minimal/Decent/Excellent (1,2,3)
 
-Blockchain Specific Documentation: Minimal/Decent/Excellent
+Blockchain Specific Documentation: Minimal/Decent/Excellent (1,2,3)
 
-Blockchain Example Code: Minimal/Decent/Excellent
-
-
-| Blockchain    | Smart Contract Language |  Experience | Difficulty    | Language Documentation | Blockchain Specific Documentation | Blockchain Example Code |
-| :---          | :---:                   | :---:       | :---:         |:---:                   | :---:                             |:---:                    |
-| NEAR Protocol | Rust                    | Some        | Hard          | Excellent              | Decent                            | Decent                  |
-|               | AssemblyScript          | None        | Easy/Medium   | Excellent              | Minimal                           | Minimal                 |
-| Polygon       | Solidity                | Some        | Medium        | Decent                 | Excellent                         | Excellent               |
-|               | Vyper                   | None        | Medium        | Decent                 | Excellent                         | Excellent               |
-| Tezos         | Archetype               | Some        | Beyond Brutal | Minimal                | Minimal                           | Minimal                 |
-|               | Ligo                    | None        | Hard          | Minimal                | Minimal                           | Minimal                 |
-|               | Morley                  | Some        | Brutal        | Decent                 | Minimal                           | Minimal                 |
-|               | SmartPy                 | Lots        | Easy          | Excellent              | Excellent                         | Excellent               |
+Blockchain Example Code: Minimal/Decent/Excellent (1,2,3)
