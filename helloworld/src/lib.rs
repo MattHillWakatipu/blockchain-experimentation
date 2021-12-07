@@ -1,5 +1,5 @@
 /*
- * This is an example of a Rust smart contract with two simple, symmetric functions:
+ * This is an example of a Rust smart helloworld with two simple, symmetric functions:
  *
  * 1. set_greeting: accepts a greeting, such as "howdy", and records it for the user (account_id)
  *    who sent the request
@@ -19,7 +19,7 @@ use near_sdk::collections::LookupMap;
 setup_alloc!();
 
 // Structs in Rust are similar to other languages, and may include impl keyword as shown below
-// Note: the names of the structs are not important when calling the smart contract, but the function names are
+// Note: the names of the structs are not important when calling the smart helloworld, but the function names are
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Welcome {
@@ -60,7 +60,7 @@ impl Welcome {
  * The rest of this file holds the inline tests for the code above
  * Learn more about Rust tests: https://doc.rust-lang.org/book/ch11-01-writing-tests.html
  *
- * To run from contract directory:
+ * To run from helloworld directory:
  * cargo test -- --nocapture
  *
  * From project root, to run in combination with frontend tests:
