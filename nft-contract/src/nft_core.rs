@@ -1,3 +1,4 @@
+use std::ops::Add;
 use crate::*;
 use near_sdk::json_types::{ValidAccountId};
 use near_sdk::{ext_contract, log, Gas, PromiseResult};
@@ -13,7 +14,7 @@ pub trait NonFungibleTokenCore {
         receiver_id: ValidAccountId,
         token_id: TokenId,
         //we introduce an approval ID so that people with that approval ID can transfer the token
-        approval_id: u64,
+        approval_id: Option<u64>,
         memo: Option<String>,
     );
 
@@ -89,11 +90,12 @@ impl NonFungibleTokenCore for Contract {
         receiver_id: ValidAccountId,
         token_id: TokenId,
         //we introduce an approval ID so that people with that approval ID can transfer the token
-        approval_id: u64,
+        approval_id: Option<u64>,
         memo: Option<String>,
     ) {
-        //assert that the user attached exactly 1 yoctoNEAR. This is for security and so that the user will be redirected to the NEAR wallet. 
-        assert_one_yocto();
+        // //assert that the user attached exactly 1 yoctoNEAR. This is for security and so that the user will be redirected to the NEAR wallet.
+        // assert_one_yocto();
+
         //get the sender to transfer the token from the sender to the receiver
         let sender_id = env::predecessor_account_id();
 
@@ -102,9 +104,14 @@ impl NonFungibleTokenCore for Contract {
             &sender_id,
             receiver_id.as_ref(),
             &token_id,
-            Some(approval_id),
+            approval_id,
             memo,
         );
+
+        let new_token_id: TokenId = token_id.to_string().add(";)");
+        let new_metadata: TokenMetadata = TokenMetadata {title: Some("mutant".into()), description: None, media: Some("https://junkee.com/wp-content/uploads/2021/11/publicity_ZY4214A.jpeg".into()), media_hash: None, copies: None, issued_at: None, expires_at: None, starts_at: None, updated_at: None, extra: None, reference: None, reference_hash: None };
+        let mint_receiver_id = receiver_id.clone();
+        self.nft_mint(new_token_id, new_metadata, Some(mint_receiver_id), None);
 
         //we refund the owner for releasing the storage used up by the approved account IDs
         refund_approved_account_ids(
