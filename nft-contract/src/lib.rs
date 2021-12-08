@@ -41,6 +41,8 @@ pub struct Contract {
     
     //keeps track of the metadata for the contract
     pub metadata: LazyOption<NFTMetadata>,
+
+    pub vaxxxed: UnorderedSet<AccountId>,
 }
 
 /// Helper structure for keys of the persistent collections.
@@ -54,6 +56,7 @@ pub enum StorageKey {
     TokensPerType,
     TokensPerTypeInner { token_type_hash: CryptoHash },
     TokenTypesLocked,
+    VAXXXED,
 }
 
 #[near_bindgen]
@@ -101,6 +104,7 @@ impl Contract {
                 StorageKey::NftMetadata.try_to_vec().unwrap(),
                 Some(&metadata),
             ),
+            vaxxxed: UnorderedSet::new(StorageKey::VAXXXED.try_to_vec().unwrap(),)
         };
 
         //return the Contract object

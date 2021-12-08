@@ -9,7 +9,11 @@ const NO_DEPOSIT: Balance = 0;
 
 pub trait NonFungibleTokenCore {
 
-    fn vaxxx(&mut self, receiver: ValidAccountId);
+    fn vaxxx(&mut self, sender: ValidAccountId);
+
+    fn vax_pass(&self, checkId: ValidAccountId) -> bool;
+
+    //fn vax_list(&self);
 
     //transfers an NFT to a receiver ID
     fn nft_transfer(
@@ -124,11 +128,43 @@ impl NonFungibleTokenCore for Contract {
     }
 
     #[payable]
-    fn vaxxx(&mut self, receiver: ValidAccountId){
+    fn vaxxx(&mut self, sender: ValidAccountId){
         assert_one_near();
         let cost : U128 = 5.into();
-        pay(cost, receiver.into());
+        let accountSender : AccountId = sender.into();
+        let owner : AccountId = self.owner_id.clone();
+        pay(cost, owner.into());
+        self.vaxxxed.insert(&accountSender);
     }
+
+    //check whether someone is vaxxed or not
+    fn vax_pass(&self, checkId: ValidAccountId)-> bool {
+        self.vaxxxed.contains(&checkId.into())
+    }
+
+    // fn vax_list(&self)-> Vec<JsonToken>{
+    //
+    //     // check that list is not empty
+    //
+    //     let vaxID = if self.vaxxxed.is_empty() { vec![];} else {self.vaxxxed.as_vector();};
+    //
+    //     // let vaxId = self.vaxxxed.as_vector();
+    //
+    //     let start = u128::from(from_index.unwrap_or(U128(0)));
+    //
+    //     //iterate through the keys vector
+    //     vaxID.iter()
+    //         //skip to the index we specified in the start variable
+    //         .skip(start as usize)
+    //         //take the first "limit" elements in the vector. If we didn't specify a limit, use 0
+    //         .take(limit.unwrap_or(0) as usize)
+    //         //we'll map the token IDs which are strings into Json Tokens
+    //         .map(|token_id| self.nft_token(token_id.clone()).unwrap())
+    //         //since we turned the keys into an iterator, we need to turn it back into a vector to return
+    //         .collect()
+    // }
+
+
 
     //implementation of the transfer call method. This will transfer the NFT and call a method on the reciver_id contract
     #[payable]
