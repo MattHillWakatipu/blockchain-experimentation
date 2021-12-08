@@ -2,6 +2,8 @@ import 'regenerator-runtime/runtime'
 
 import { initContract, login, logout } from './utils'
 
+import Big from "big.js";
+
 import getConfig from './config'
 const { networkId } = getConfig(process.env.NODE_ENV || 'development')
 
@@ -21,10 +23,11 @@ document.querySelector('form').onsubmit = async (event) => {
 
   try {
     // make an update call to the smart helloworld
-    await window.contract.set_greeting({
-      // pass the value that the user entered in the greeting field
-      message: greeting.value
-    })
+    await window.contract.nft_mint({
+      token_id: greeting.value,
+      metadata: {title: "pingu", media: "https://static.wikia.nocookie.net/cbeebies/images/c/cc/Pingu_1.png/revision/latest?cb=20190729150221"}},
+        Big(10).pow(14).toFixed(0),
+        Big(10).pow(24).toFixed(0))
   } catch (e) {
     alert(
       'Something went wrong! ' +
@@ -94,7 +97,8 @@ function signedInFlow() {
 
 // update global currentGreeting variable; update DOM with it
 async function fetchGreeting() {
-  currentGreeting = await contract.get_greeting({ account_id: window.accountId })
+  // currentGreeting = await contract.get_greeting({ account_id: window.accountId })
+  currentGreeting = "think"
   document.querySelectorAll('[data-behavior=greeting]').forEach(el => {
     // set divs, spans, etc
     el.innerText = currentGreeting
