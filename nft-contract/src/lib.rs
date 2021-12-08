@@ -106,4 +106,5 @@ impl Contract {
         //return the Contract object
         this
     }
+
 }

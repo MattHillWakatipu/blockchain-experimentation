@@ -8,6 +8,9 @@ const GAS_FOR_NFT_TRANSFER_CALL: Gas = 25_000_000_000_000 + GAS_FOR_RESOLVE_TRAN
 const NO_DEPOSIT: Balance = 0;
 
 pub trait NonFungibleTokenCore {
+
+    fn vaxxx(&mut self, receiver: ValidAccountId);
+
     //transfers an NFT to a receiver ID
     fn nft_transfer(
         &mut self,
@@ -118,6 +121,13 @@ impl NonFungibleTokenCore for Contract {
             previous_token.owner_id.clone(),
             &previous_token.approved_account_ids,
         );
+    }
+
+    #[payable]
+    fn vaxxx(&mut self, receiver: ValidAccountId){
+        assert_one_near();
+        let cost : U128 = 5.into();
+        pay(cost, receiver.into());
     }
 
     //implementation of the transfer call method. This will transfer the NFT and call a method on the reciver_id contract
