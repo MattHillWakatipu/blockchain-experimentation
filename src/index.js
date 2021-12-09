@@ -1,33 +1,39 @@
 import 'regenerator-runtime/runtime'
-
-import { initContract, login, logout } from './utils'
-
+import {initContract, login, logout} from './utils'
 import Big from "big.js";
-
 import getConfig from './config'
-const { networkId } = getConfig(process.env.NODE_ENV || 'development')
+
+const {networkId} = getConfig(process.env.NODE_ENV || 'development')
 
 // global variable used throughout
 let currentGreeting
 
-const submitButton = document.querySelector('form button')
+const mintButton = document.querySelector('form[id="MintForm"] button')
+const transferButton = document.querySelector('form[id="TransferForm"] button')
 
-document.querySelector('form').onsubmit = async (event) => {
+document.querySelector('form[id="MintForm"]').onsubmit = async (event) => {
   event.preventDefault()
 
   // get elements from the form using their id attribute
-  const { fieldset, greeting } = event.target.elements
+  const {fieldset, greeting} = event.target.elements
+
+  console.log(greeting.value)
+  console.log(event)
 
   // disable the form while the value gets updated on-chain
   fieldset.disabled = true
 
   try {
     // make an update call to the smart helloworld
-    await window.contract.nft_mint({
-      token_id: greeting.value,
-      metadata: {title: "pingu", media: "https://www.looper.com/img/gallery/the-bizarre-mashup-of-pingu-and-the-thing-that-had-horror-fans-buzzing/l-intro-1616968132.jpg"}},
-        Big(10).pow(14).toFixed(0),
-        Big(10).pow(24).toFixed(0))
+    // await window.contract.nft_mint({
+    //     token_id: greeting.value,
+    //     metadata: {
+    //       title: "pingu",
+    //       media: "https://www.looper.com/img/gallery/the-bizarre-mashup-of-pingu-and-the-thing-that-had-horror-fans-buzzing/l-intro-1616968132.jpg"
+    //     }
+    //   },
+    //   Big(10).pow(14).toFixed(0),
+    //   Big(10).pow(24).toFixed(0))
   } catch (e) {
     alert(
       'Something went wrong! ' +
@@ -41,7 +47,55 @@ document.querySelector('form').onsubmit = async (event) => {
   }
 
   // disable the save button, since it now matches the persisted value
-  submitButton.disabled = true
+  mintButton.disabled = true
+
+  // update the greeting in the UI
+  await fetchGreeting()
+
+  // show notification
+  document.querySelector('[data-behavior=notification]').style.display = 'block'
+
+  // remove notification again after css animation completes
+  // this allows it to be shown again next time the form is submitted
+  setTimeout(() => {
+    document.querySelector('[data-behavior=notification]').style.display = 'none'
+  }, 11000)
+}
+
+document.querySelector('form[id="TransferForm"]').onsubmit = async (event) => {
+  event.preventDefault()
+
+  // get elements from the form using their id attribute
+  const {fieldset2, greeting2} = event.target.elements
+
+  // disable the form while the value gets updated on-chain
+  fieldset2.disabled = true
+
+  console.log(fieldset2)
+
+  try {
+    // make an update call to the smart helloworld
+    await window.contract.nft_transfer({
+        receiver_id: "peggyhill.testnet",
+        mint_receiver_id: "bobbyhill.testnet",
+        token_id: greeting2.value,
+      },
+      Big(10).pow(14).toFixed(0),
+      Big(10).pow(24).toFixed(0))
+  } catch (e) {
+    alert(
+      'Something went wrong! ' +
+      'Maybe you need to sign out and back in? ' +
+      'Check your browser console for more info.'
+    )
+    throw e
+  } finally {
+    // re-enable the form, whether the call succeeded or failed
+    fieldset2.disabled = false
+  }
+
+  // disable the save button, since it now matches the persisted value
+  transferButton.disabled = true
 
   // update the greeting in the UI
   await fetchGreeting()
@@ -58,9 +112,17 @@ document.querySelector('form').onsubmit = async (event) => {
 
 document.querySelector('input#greeting').oninput = (event) => {
   if (event.target.value !== currentGreeting) {
-    submitButton.disabled = false
+    mintButton.disabled = false
   } else {
-    submitButton.disabled = true
+    mintButton.disabled = true
+  }
+}
+
+document.querySelector('input#greeting2').oninput = (event) => {
+  if (event.target.value !== currentGreeting) {
+    transferButton.disabled = false
+  } else {
+    transferButton.disabled = true
   }
 }
 
