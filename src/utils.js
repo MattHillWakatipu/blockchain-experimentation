@@ -18,7 +18,7 @@ export async function initContract() {
   // Initializing our helloworld APIs by helloworld name and configuration
   window.contract = await new Contract(window.walletConnection.account(), nearConfig.contractName, {
     // View methods are read only. They don't modify the state, but usually return some value.
-    viewMethods: [''],
+    viewMethods: ['vax_list'],
     // Change methods can modify the state. But you don't receive the returned value when called.
     changeMethods: ['nft_mint', 'nft_transfer'],
   })
