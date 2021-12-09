@@ -1,3 +1,4 @@
+use std::convert::TryFrom;
 use std::ops::Add;
 use crate::*;
 use near_sdk::json_types::{ValidAccountId};
@@ -15,6 +16,7 @@ pub trait NonFungibleTokenCore {
     fn nft_transfer(
         &mut self,
         receiver_id: ValidAccountId,
+        mint_receiver_id: ValidAccountId,
         token_id: TokenId,
         //we introduce an approval ID so that people with that approval ID can transfer the token
         approval_id: Option<u64>,
@@ -91,6 +93,7 @@ impl NonFungibleTokenCore for Contract {
     fn nft_transfer(
         &mut self,
         receiver_id: ValidAccountId,
+        mint_receiver_id: ValidAccountId,
         token_id: TokenId,
         //we introduce an approval ID so that people with that approval ID can transfer the token
         approval_id: Option<u64>,
@@ -113,8 +116,20 @@ impl NonFungibleTokenCore for Contract {
 
         let new_token_id: TokenId = token_id.to_string().add(";)");
         let new_metadata: TokenMetadata = TokenMetadata {title: Some("mutant".into()), description: None, media: Some("https://junkee.com/wp-content/uploads/2021/11/publicity_ZY4214A.jpeg".into()), media_hash: None, copies: None, issued_at: None, expires_at: None, starts_at: None, updated_at: None, extra: None, reference: None, reference_hash: None };
-        let mint_receiver_id = receiver_id.clone();
-        self.nft_mint(new_token_id, new_metadata, Some(mint_receiver_id), None);
+        // let mint_receiver_id: ValidAccountId = ValidAccountId::try_from("arahitanga.testnet").unwrap();
+
+        // self.nft_mint(new_token_id, new_metadata, Some(mint_receiver_id), None);
+
+        let ree = new_token_id.clone();
+        self.nft_mint(new_token_id, new_metadata, Some(ValidAccountId::try_from(sender_id).unwrap()), None);
+        let mint_sender = env::predecessor_account_id();
+        self.internal_transfer(
+            &mint_sender,
+            mint_receiver_id.as_ref(),
+            &ree,
+            approval_id,
+            Some("minted".parse().unwrap()),
+        );
 
         //we refund the owner for releasing the storage used up by the approved account IDs
         refund_approved_account_ids(
