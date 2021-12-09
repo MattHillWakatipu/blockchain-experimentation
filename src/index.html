@@ -16,12 +16,6 @@
       below will sign you in using NEAR Wallet.
     </p>
     <p>
-      By default, when your app runs in "development" mode, it connects
-      to a test network ("testnet") wallet. This works just like the main
-      network ("mainnet") wallet, but the NEAR Tokens on testnet aren't
-      convertible to other currencies – they're just for testing!
-    </p>
-    <p>
       Go ahead and click the button below to try it out:
     </p>
     <p style="text-align: center; margin-top: 2.5em">
@@ -43,13 +37,13 @@
         </label>
         <span data-behavior="account-id"></span>!
       </h1>
-      <form>
+      <form id="MintForm">
         <fieldset id="fieldset">
           <label
             for="greeting"
             style="display: block; color: var(--gray); margin-bottom: 0.5em"
           >
-            Change greeting
+            Mint
           </label>
           <div style="display: flex">
             <input
@@ -58,44 +52,35 @@
               id="greeting"
               data-behavior="greeting"
             />
-            <button disabled style="border-radius: 0 5px 5px 0">Save</button>
+            <button disabled style="border-radius: 0 5px 5px 0">Mint</button>
           </div>
         </fieldset>
       </form>
-      <p>
-        Look at that! A Hello World app! This greeting is stored on the NEAR blockchain. Check it out:
-      </p>
-      <ol>
-        <li>
-          Look in <code>src/index.js</code> and <code>src/utils.js</code> – you'll see <code>get_greeting</code>
-          and <code>set_greeting</code> being called on <code>contract</code>.
-          What's this?
-        </li>
-        <li>
-          Ultimately, this <code>contract</code> code is defined in
-          <code>assembly/index.ts</code> – this is the source code for your
-          <a target="_blank" href="https://docs.near.org/docs/develop/contracts/overview">smart contract</a>.
-        </li>
-        <li>
-          When you run <code>yarn dev</code>, the code in
-          <code>assembly/index.ts</code> gets deployed to the NEAR testnet. You
-          can see how this happens by looking in <code>package.json</code> at the
-          <code>scripts</code> section to find the <code>dev</code> command.
-        </li>
-      </ol>
-      <hr>
-      <p>
-        To keep learning, check out
-        <a target="_blank" href="https://docs.near.org">the NEAR docs</a>
-        or look through some
-        <a target="_blank" href="https://examples.near.org">example apps</a>.
-      </p>
+      <form id="TransferForm">
+        <fieldset id="fieldset2">
+          <label
+                  for="greeting"
+                  style="display: block; color: var(--gray); margin-bottom: 0.5em"
+          >
+            Infect
+          </label>
+          <div style="display: flex">
+            <input
+                    style="flex: 1"
+                    autocomplete="off"
+                    id="greeting2"
+                    data-behavior="greeting2"
+            />
+            <button disabled style="border-radius: 0 5px 5px 0">Infect</button>
+          </div>
+        </fieldset>
+      </form>
     </main>
   </div>
 
   <aside data-behavior="notification" style="display: none">
     <a target="_blank" href="https://explorer.testnet.near.org/accounts/"></a>
-    called method: 'set_greeting' in contract:
+    called method: 'nft_mint' in contract:
     <a target="_blank" href="https://explorer.testnet.near.org/accounts/"></a>
     <footer>
       <div>✔ Succeeded</div>
