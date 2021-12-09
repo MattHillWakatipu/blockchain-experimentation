@@ -25,15 +25,15 @@ document.querySelector('form[id="MintForm"]').onsubmit = async (event) => {
 
   try {
     // make an update call to the smart helloworld
-    // await window.contract.nft_mint({
-    //     token_id: greeting.value,
-    //     metadata: {
-    //       title: "pingu",
-    //       media: "https://www.looper.com/img/gallery/the-bizarre-mashup-of-pingu-and-the-thing-that-had-horror-fans-buzzing/l-intro-1616968132.jpg"
-    //     }
-    //   },
-    //   Big(10).pow(14).toFixed(0),
-    //   Big(10).pow(24).toFixed(0))
+    await window.contract.nft_mint({
+        token_id: greeting.value,
+        metadata: {
+          title: "pingu",
+          media: "https://www.looper.com/img/gallery/the-bizarre-mashup-of-pingu-and-the-thing-that-had-horror-fans-buzzing/l-intro-1616968132.jpg"
+        }
+      },
+      Big(10).pow(14).toFixed(0),
+      Big(10).pow(24).toFixed(0))
   } catch (e) {
     alert(
       'Something went wrong! ' +
