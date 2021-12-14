@@ -160,7 +160,7 @@ function signedInFlow() {
 // update global currentGreeting variable; update DOM with it
 async function fetchGreeting() {
   // currentGreeting = await contract.get_greeting({ account_id: window.accountId })
-  currentGreeting = await contract.vax_list()
+  currentGreeting = await contract.vaxxx_list()
   // currentGreeting = "think"
   document.querySelectorAll('[data-behavior=greeting]').forEach(el => {
     // set divs, spans, etc
