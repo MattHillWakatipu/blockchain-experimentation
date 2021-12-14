@@ -166,8 +166,8 @@ mod tests {
         ValidAccountId::try_from(input).expect("not a valid account id")
     }
 
-    #[test]
     /// Ensure initialisation of metadata works and that the vaxxx list begins empty
+    #[test]
     fn check_initialisation() {
         let context = get_context(alice(), 0);
         testing_env!(context);
@@ -184,8 +184,8 @@ mod tests {
     //// Mint Tests ////
     ////////////////////
 
-    #[test]
     /// Ensure that minting without providing a receiver id sends the NFT to the caller
+    #[test]
     fn mint_no_receiver() {
         let context = get_context(alice(), 0);
         testing_env!(context);
@@ -202,8 +202,8 @@ mod tests {
         assert_eq!(alice(), token.owner_id, "Token should belong to alice.");
     }
 
-    #[test]
     /// Ensure that minting and providing a receiver id sends the NFT to the receiver
+    #[test]
     fn mint_with_receiver() {
         let context = get_context(alice(), 0);
         testing_env!(context);
@@ -220,8 +220,8 @@ mod tests {
         assert_eq!(bob(), token.owner_id, "Token should belong to bob.");
     }
 
-    #[test]
     /// Ensure that metadata of a minted token is correct
+    #[test]
     fn mint_check_metadata() {
         let context = get_context(alice(), 0);
         testing_env!(context);
@@ -254,8 +254,8 @@ mod tests {
     //// Transfer Tests ////
     ////////////////////////
 
-    #[test]
     /// Ensure that the transfer sends the original token to the recipient
+    #[test]
     fn transfer_sends_original() {
         let context = get_context(alice(), 0);
         testing_env!(context);
@@ -280,8 +280,8 @@ mod tests {
         assert_eq!(bob(), token.owner_id, "Token should belong to bob after transfer.");
     }
 
-    #[test]
     /// Ensure that the transfer sends the original token to the recipient
+    #[test]
     fn transfer_creates_mutant() {
         let context = get_context(alice(), 0);
         testing_env!(context);
@@ -310,8 +310,8 @@ mod tests {
     //// Vaxxx Tests ////
     /////////////////////
 
-    #[test]
     /// Check that vaxxx function adds to the vaxxxed list
+    #[test]
     fn vaxxx_adds_to_vaxxxed() {
         let context = get_context(bob(), 0);
         testing_env!(context);
@@ -328,6 +328,7 @@ mod tests {
         contract.vaxxxed.contains(&bob());
     }
 
+    /// Check that vaxxx_pass returns true for vaxxxed addresses and false for un-vaxxxed
     #[test]
     fn check_vaxxx_pass() {
         let context = get_context(bob(), 0);
@@ -337,10 +338,11 @@ mod tests {
 
         contract.vaxxx(valid_account("alice.near")); // Vaxxx alice
         assert!(contract.vaxxx_pass(valid_account("alice.near")), "Expected alice to be vaxxxed");
+        assert!(!contract.vaxxx_pass(valid_account("bob.near")), "Expected bob to be un-vaxxxed");
     }
 
-    #[test]
     /// Check that the vaxxx_list contains all of the added addresses
+    #[test]
     fn check_vaxxx_list() {
         let context = get_context(bob(), 0);
         testing_env!(context);
