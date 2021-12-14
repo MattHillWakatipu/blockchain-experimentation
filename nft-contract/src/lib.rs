@@ -111,3 +111,57 @@ impl Contract {
         this
     }
 }
+
+
+#[cfg(test)]
+mod tests {
+    use std::convert::TryFrom;
+    use super::*;
+    use near_sdk::MockedBlockchain;
+    use near_sdk::{testing_env, VMContext};
+
+    fn get_context(predecessor_account_id: String, storage_usage: u64) -> VMContext {
+        VMContext {
+            current_account_id: "alice.testnet".to_string(),
+            signer_account_id: "jane.testnet".to_string(),
+            signer_account_pk: vec![0, 1, 2],
+            predecessor_account_id,
+            input: vec![],
+            block_index: 0,
+            block_timestamp: 0,
+            account_balance: 0,
+            account_locked_balance: 0,
+            storage_usage,
+            attached_deposit: 0,
+            prepaid_gas: 10u64.pow(18),
+            random_seed: vec![0, 1, 2],
+            is_view: false,
+            output_data_receivers: vec![],
+            epoch_height: 19,
+        }
+    }
+
+    fn account(input : &str) -> ValidAccountId {
+        ValidAccountId::try_from(input).expect("not a valid account id")
+    }
+
+    // Tests
+    #[test]
+    fn vaxxx_adds_to_vaxxxed_set() {
+        let context = get_context("robert.testnet".to_string(), 0);
+        testing_env!(context);
+        let mut contract = Contract::new_default_meta(account("contract.testnet"));
+        let length_before = contract.vaxxxed.len();
+        assert_eq!(0, length_before, "Expected empty vaxxx list."); // ensure vaxxx list empty on initialization
+        // contract.vaxxx(account("alice.testnet"));
+        // let length_after = contract.vaxxxed.len();
+        // assert_eq!(1, length_after, "Expected single addition to vaxxx list."); // ensure vaxxx list empty on initialization
+
+        // contract.grant_access(joe());
+        // let length_after = contract.account_gives_access.len();
+        // assert_eq!(1, length_after, "Expected an entry in the account's access Map.");
+        // let predecessor_hash = env::sha256(robert().as_bytes());
+        // let num_grantees = contract.account_gives_access.get(&predecessor_hash).unwrap();
+        // assert_eq!(2, num_grantees.len(), "Expected two accounts to have access to predecessor.");
+    }
+}
