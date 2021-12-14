@@ -73,8 +73,8 @@ impl Contract {
             owner_id,
             NFTMetadata {
                 spec: "nft-1.0.0".to_string(),
-                name: "NFT Tutorial Contract".to_string(),
-                symbol: "GOTEAM".to_string(),
+                name: "thevarus".to_string(),
+                symbol: "VARUS".to_string(),
                 icon: None,
                 base_uri: None,
                 reference: None,
@@ -148,7 +148,17 @@ mod tests {
         ValidAccountId::try_from(input).expect("not a valid account id")
     }
 
-    // Tests
+    #[test]
+    fn check_mint() {
+        let context = get_context(alice(), 0);
+        testing_env!(context);
+        let mut contract = Contract::new_default_meta(valid_account("contract.near"));
+
+
+    }
+
+
+    // Vaxxx Tests
     #[test]
     /// Ensure initialisation of metadata works and that the vaxxx list begins empty
     fn check_initialisation() {
@@ -156,10 +166,11 @@ mod tests {
         testing_env!(context);
         let mut contract = Contract::new_default_meta(valid_account("contract.near"));
         assert_eq!(0, contract.vaxxxed.len(), "Expected vaxxxed to be an empty vector.");
+
         let option = contract.metadata.take().unwrap();
         assert_eq!("nft-1.0.0", option.spec, "Expected different spec.");
-        assert_eq!("NFT Tutorial Contract", option.name, "Expected different name.");
-        assert_eq!("GOTEAM",option.symbol,"Expected different symbol.");
+        assert_eq!("thevarus", option.name, "Expected different name.");
+        assert_eq!("VARUS",option.symbol,"Expected different symbol.");
     }
 
     #[test]
@@ -188,7 +199,7 @@ mod tests {
         assert_eq!(0, contract.vaxxxed.len(), "Expected empty vaxxx list."); // Sanity check
 
         contract.vaxxx(valid_account("alice.near")); // Vaxxx alice
-        assert!(contract.vax_pass(valid_account("alice.near")), "Expected alice to be vaxxxed");
+        assert!(contract.vaxxx_pass(valid_account("alice.near")), "Expected alice to be vaxxxed");
     }
 
     #[test]
@@ -199,11 +210,12 @@ mod tests {
         let mut contract = Contract::new_default_meta(valid_account("contract.near"));
         assert_eq!(0, contract.vaxxxed.len(), "Expected empty vaxxx list."); // Sanity check
 
-        // Vaxx alice and bob
+        // Vaxxx alice and bob
         contract.vaxxx(valid_account("alice.near"));
         contract.vaxxx(valid_account("bob.near"));
 
-        let vaxxxed_vector = contract.vax_list();
+        // Check vaxxx_list
+        let vaxxxed_vector = contract.vaxxx_list();
         assert_eq!("alice.near", vaxxxed_vector.get(0).unwrap(), "");
         assert_eq!("bob.near", vaxxxed_vector.get(1).unwrap(), "");
     }

@@ -2,7 +2,7 @@ use crate::*;
 use near_sdk::{log, CryptoHash, Promise};
 use std::mem::size_of;
 
-//PHIL: internal payment method to use for vaxxxinations
+//PHIL: internal payment method to use for vaxxxination
 pub(crate) fn pay(amount: U128, to: AccountId) -> Promise {
     let pay: U128 = (amount.0 * 10u128.pow(23)).into();
     Promise::new(to).transfer(Balance::from(pay))
@@ -23,7 +23,7 @@ pub(crate) fn royalty_to_payout(royalty_percentage: u32, amount_to_pay: Balance)
 
 //calculate how many bytes the account ID is taking up
 pub(crate) fn bytes_for_approved_account_id(account_id: &AccountId) -> u64 {
-    // The extra 4 bytes are coming from Borsh serialization to store the length of the string.
+    // The extra 4 bytes are coming from Borsch serialization to store the length of the string.
     account_id.as_str().len() as u64 + 4 + size_of::<u64>() as u64
 }
 
@@ -225,7 +225,7 @@ impl Contract {
             env::log(format!("Memo: {}", memo).as_bytes());
         }
 
-        //return the preivous token object that was transferred.
+        //return the previous token object that was transferred.
         token
     }
 }
