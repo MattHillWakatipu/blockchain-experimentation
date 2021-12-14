@@ -20,7 +20,7 @@ mod enumeration;
 mod metadata; 
 mod mint; 
 mod nft_core; 
-mod royalty; 
+mod royalty;
 
 near_sdk::setup_alloc!();
 
@@ -119,11 +119,13 @@ mod tests {
     use super::*;
     use near_sdk::MockedBlockchain;
     use near_sdk::{testing_env, VMContext};
+    use near_sdk::test_utils::test_env::{alice, bob};
 
+    /// Create a virtual blockchain from input parameters
     fn get_context(predecessor_account_id: String, storage_usage: u64) -> VMContext {
         VMContext {
-            current_account_id: "alice.testnet".to_string(),
-            signer_account_id: "jane.testnet".to_string(),
+            current_account_id: "contract.testnet".to_string(),
+            signer_account_id: alice(),
             signer_account_pk: vec![0, 1, 2],
             predecessor_account_id,
             input: vec![],
@@ -132,7 +134,7 @@ mod tests {
             account_balance: 0,
             account_locked_balance: 0,
             storage_usage,
-            attached_deposit: 0,
+            attached_deposit: 10u128.pow(24) as Balance,
             prepaid_gas: 10u64.pow(18),
             random_seed: vec![0, 1, 2],
             is_view: false,
@@ -141,27 +143,68 @@ mod tests {
         }
     }
 
-    fn account(input : &str) -> ValidAccountId {
+    /// Helper function to construct a valid account from input string
+    fn valid_account(input : &str) -> ValidAccountId {
         ValidAccountId::try_from(input).expect("not a valid account id")
     }
 
     // Tests
     #[test]
-    fn vaxxx_adds_to_vaxxxed_set() {
-        let context = get_context("robert.testnet".to_string(), 0);
+    /// Ensure initialisation of metadata works and that the vaxxx list begins empty
+    fn check_initialisation() {
+        let context = get_context(alice(), 0);
         testing_env!(context);
-        let mut contract = Contract::new_default_meta(account("contract.testnet"));
-        let length_before = contract.vaxxxed.len();
-        assert_eq!(0, length_before, "Expected empty vaxxx list."); // ensure vaxxx list empty on initialization
-        // contract.vaxxx(account("alice.testnet"));
-        // let length_after = contract.vaxxxed.len();
-        // assert_eq!(1, length_after, "Expected single addition to vaxxx list."); // ensure vaxxx list empty on initialization
+        let mut contract = Contract::new_default_meta(valid_account("contract.near"));
+        assert_eq!(0, contract.vaxxxed.len(), "Expected vaxxxed to be an empty vector.");
+        let option = contract.metadata.take().unwrap();
+        assert_eq!("nft-1.0.0", option.spec, "Expected different spec.");
+        assert_eq!("NFT Tutorial Contract", option.name, "Expected different name.");
+        assert_eq!("GOTEAM",option.symbol,"Expected different symbol.");
+    }
 
-        // contract.grant_access(joe());
-        // let length_after = contract.account_gives_access.len();
-        // assert_eq!(1, length_after, "Expected an entry in the account's access Map.");
-        // let predecessor_hash = env::sha256(robert().as_bytes());
-        // let num_grantees = contract.account_gives_access.get(&predecessor_hash).unwrap();
-        // assert_eq!(2, num_grantees.len(), "Expected two accounts to have access to predecessor.");
+    #[test]
+    /// Check that vaxxx function adds to the vaxxxed list
+    fn vaxxx_adds_to_vaxxxed() {
+        let context = get_context(bob(), 0);
+        testing_env!(context);
+        let mut contract = Contract::new_default_meta(valid_account("contract.near"));
+        assert_eq!(0, contract.vaxxxed.len(), "Expected empty vaxxx list."); // Sanity check
+
+        // vaxxx alice and bob
+        contract.vaxxx(valid_account("alice.near"));
+        contract.vaxxx(valid_account("bob.near"));
+
+        // ensure vaxxx list now contains both alice and bob
+        assert_eq!(2, contract.vaxxxed.len(), "Expected single addition to vaxxx list.");
+        contract.vaxxxed.contains(&alice());
+        contract.vaxxxed.contains(&bob());
+    }
+
+    #[test]
+    fn check_vaxxx_pass() {
+        let context = get_context(bob(), 0);
+        testing_env!(context);
+        let mut contract = Contract::new_default_meta(valid_account("contract.near"));
+        assert_eq!(0, contract.vaxxxed.len(), "Expected empty vaxxx list."); // Sanity check
+
+        contract.vaxxx(valid_account("alice.near")); // Vaxxx alice
+        assert!(contract.vax_pass(valid_account("alice.near")), "Expected alice to be vaxxxed");
+    }
+
+    #[test]
+    /// Check that the vaxxx_list contains all of the added addresses
+    fn check_vaxxx_list() {
+        let context = get_context(bob(), 0);
+        testing_env!(context);
+        let mut contract = Contract::new_default_meta(valid_account("contract.near"));
+        assert_eq!(0, contract.vaxxxed.len(), "Expected empty vaxxx list."); // Sanity check
+
+        // Vaxx alice and bob
+        contract.vaxxx(valid_account("alice.near"));
+        contract.vaxxx(valid_account("bob.near"));
+
+        let vaxxxed_vector = contract.vax_list();
+        assert_eq!("alice.near", vaxxxed_vector.get(0).unwrap(), "");
+        assert_eq!("bob.near", vaxxxed_vector.get(1).unwrap(), "");
     }
 }
