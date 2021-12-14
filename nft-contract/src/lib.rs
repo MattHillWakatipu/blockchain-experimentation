@@ -119,7 +119,7 @@ mod tests {
     use super::*;
     use near_sdk::MockedBlockchain;
     use near_sdk::{testing_env, VMContext};
-    use near_sdk::test_utils::test_env::{alice, bob};
+    use near_sdk::test_utils::test_env::{alice, bob, carol};
 
     /// Create a virtual blockchain from input parameters
     fn get_context(predecessor_account_id: String, storage_usage: u64) -> VMContext {
@@ -131,7 +131,7 @@ mod tests {
             input: vec![],
             block_index: 0,
             block_timestamp: 0,
-            account_balance: 0,
+            account_balance: 10u128.pow(25) as Balance,
             account_locked_balance: 0,
             storage_usage,
             attached_deposit: 10u128.pow(24) as Balance,
@@ -143,22 +143,29 @@ mod tests {
         }
     }
 
+    /// Helper function to create TokenMetadata of thevarus
+    fn get_thevarus() -> TokenMetadata {
+        TokenMetadata {
+            title: Some(String::from("thevarus")),
+            description: Some(String::from("pathogen")),
+            media: Some(String::from("https://tinyurl.com/bddjmwk4")),
+            media_hash: Some(Base64VecU8(vec![0,1,2])),
+            copies: Some(1),
+            issued_at: Some(1_000),
+            expires_at: Some(1_000_000),
+            starts_at: Some(10_000),
+            updated_at: Some(100_000),
+            extra: Some(String::from("some extra data")),
+            reference: Some(String::from("thevarus.extra-info")),
+            reference_hash: Some(Base64VecU8(vec![1,2,3])),
+        }
+    }
+
     /// Helper function to construct a valid account from input string
     fn valid_account(input : &str) -> ValidAccountId {
         ValidAccountId::try_from(input).expect("not a valid account id")
     }
 
-    #[test]
-    fn check_mint() {
-        let context = get_context(alice(), 0);
-        testing_env!(context);
-        let mut contract = Contract::new_default_meta(valid_account("contract.near"));
-
-
-    }
-
-
-    // Vaxxx Tests
     #[test]
     /// Ensure initialisation of metadata works and that the vaxxx list begins empty
     fn check_initialisation() {
@@ -172,6 +179,136 @@ mod tests {
         assert_eq!("thevarus", option.name, "Expected different name.");
         assert_eq!("VARUS",option.symbol,"Expected different symbol.");
     }
+
+    ////////////////////
+    //// Mint Tests ////
+    ////////////////////
+
+    #[test]
+    /// Ensure that minting without providing a receiver id sends the NFT to the caller
+    fn mint_no_receiver() {
+        let context = get_context(alice(), 0);
+        testing_env!(context);
+        let mut contract = Contract::new_default_meta(valid_account("contract.near"));
+
+        contract.nft_mint(
+            "thevarus".to_string(),
+            get_thevarus(),
+            None,
+            None
+        );
+
+        let token = contract.tokens_by_id.get(&TokenId::from("thevarus")).unwrap();
+        assert_eq!(alice(), token.owner_id, "Token should belong to alice.");
+    }
+
+    #[test]
+    /// Ensure that minting and providing a receiver id sends the NFT to the receiver
+    fn mint_with_receiver() {
+        let context = get_context(alice(), 0);
+        testing_env!(context);
+        let mut contract = Contract::new_default_meta(valid_account("contract.near"));
+
+        contract.nft_mint(
+            "thevarus".to_string(),
+            get_thevarus(),
+            Some(valid_account("bob.near")),
+            None
+        );
+
+        let token = contract.tokens_by_id.get(&TokenId::from("thevarus")).unwrap();
+        assert_eq!(bob(), token.owner_id, "Token should belong to bob.");
+    }
+
+    #[test]
+    /// Ensure that metadata of a minted token is correct
+    fn mint_check_metadata() {
+        let context = get_context(alice(), 0);
+        testing_env!(context);
+        let mut contract = Contract::new_default_meta(valid_account("contract.near"));
+
+        contract.nft_mint(
+            "thevarus".to_string(),
+            get_thevarus(),
+            None,
+            None
+        );
+
+        let actual = contract.token_metadata_by_id.get(&TokenId::from("thevarus")).unwrap();
+        let expected = get_thevarus();
+        assert_eq!(expected.title, actual.title, "Expected title to be equal.");
+        assert_eq!(expected.description, actual.description, "Expected description to be equal.");
+        assert_eq!(expected.media, actual.media, "Expected media to be equal.");
+        assert_eq!(expected.media_hash, actual.media_hash, "Expected media_hash to be equal.");
+        assert_eq!(expected.copies, actual.copies, "Expected copies to be equal.");
+        assert_eq!(expected.issued_at, actual.issued_at, "Expected issued-at to be equal.");
+        assert_eq!(expected.expires_at, actual.expires_at, "Expected expires_at to be equal.");
+        assert_eq!(expected.starts_at, actual.starts_at, "Expected starts_at to be equal.");
+        assert_eq!(expected.updated_at, actual.updated_at, "Expected updated_at to be equal.");
+        assert_eq!(expected.extra, actual.extra, "Expected actual to be equal.");
+        assert_eq!(expected.reference, actual.reference, "Expected reference to be equal.");
+        assert_eq!(expected.reference_hash, actual.reference_hash, "Expected reference_hash to be equal.");
+    }
+
+    ////////////////////////
+    //// Transfer Tests ////
+    ////////////////////////
+
+    #[test]
+    /// Ensure that the transfer sends the original token to the recipient
+    fn transfer_sends_original() {
+        let context = get_context(alice(), 0);
+        testing_env!(context);
+        let mut contract = Contract::new_default_meta(valid_account("contract.near"));
+
+        contract.nft_mint(
+            "thevarus".to_string(),
+            get_thevarus(),
+            None,
+            None
+        );
+
+        contract.nft_transfer(
+            valid_account("bob.near"),
+            valid_account("carol.near"),
+            "thevarus".to_string(),
+            None,
+            None
+        );
+
+        let token = contract.tokens_by_id.get(&TokenId::from("thevarus")).unwrap();
+        assert_eq!(bob(), token.owner_id, "Token should belong to bob after transfer.");
+    }
+
+    #[test]
+    /// Ensure that the transfer sends the original token to the recipient
+    fn transfer_creates_mutant() {
+        let context = get_context(alice(), 0);
+        testing_env!(context);
+        let mut contract = Contract::new_default_meta(valid_account("contract.near"));
+
+        contract.nft_mint(
+            "thevarus".to_string(),
+            get_thevarus(),
+            None,
+            None
+        );
+
+        contract.nft_transfer(
+            valid_account("bob.near"),
+            valid_account("carol.near"),
+            "thevarus".to_string(),
+            None,
+            None
+        );
+
+        let token = contract.tokens_by_id.get(&TokenId::from("thevarus;)")).unwrap();
+        assert_eq!(carol(), token.owner_id, "Token should belong to bob after transfer.");
+    }
+
+    /////////////////////
+    //// Vaxxx Tests ////
+    /////////////////////
 
     #[test]
     /// Check that vaxxx function adds to the vaxxxed list
