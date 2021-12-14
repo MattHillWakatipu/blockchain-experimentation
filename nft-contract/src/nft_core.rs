@@ -12,9 +12,9 @@ pub trait NonFungibleTokenCore {
 
     fn vaxxx(&mut self, sender: ValidAccountId);
 
-    fn vax_pass(&self, check_id: ValidAccountId) -> bool;
+    fn vaxxx_pass(&self, check_id: ValidAccountId) -> bool;
 
-    fn vax_list(&self) -> Vec<AccountId>;
+    fn vaxxx_list(&self) -> Vec<AccountId>;
 
     //transfers an NFT to a receiver ID
     fn nft_transfer(
@@ -152,12 +152,12 @@ impl NonFungibleTokenCore for Contract {
         self.vaxxxed.insert(&account_sender);
     }
 
-    //check whether someone is vaxxed or not
-    fn vax_pass(&self, check_id: ValidAccountId) -> bool {
+    //check whether someone is vaxxxed or not
+    fn vaxxx_pass(&self, check_id: ValidAccountId) -> bool {
         self.vaxxxed.contains(&check_id.into())
     }
 
-    fn vax_list(&self)-> Vec<AccountId>{
+    fn vaxxx_list(&self) -> Vec<AccountId>{
         self.vaxxxed.to_vec()
     }
 
