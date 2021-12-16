@@ -9,15 +9,15 @@ impl Contract {
         let burn_address: AccountId = "burn.near".to_string();
 
         // get a token to cure
-        let tokens_set = self.tokens_per_owner.get(&sender_id).expect("Account not infected.");
+        let tokens = self.tokens_per_owner.get(&sender_id).expect("Account not infected.").to_vec();
 
-        tokens_set.iter()
+        tokens.iter()
             .map(|token_id| self.internal_transfer(
                 &sender_id,
                 &burn_address,
                 &token_id,
                 None,
-                None,
-            )).for_each(drop);
+                None))
+            .for_each(drop);
     }
 }
