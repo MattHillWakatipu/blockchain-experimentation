@@ -11,6 +11,7 @@ let currentGreeting
 const mintButton = document.querySelector('form[id="MintForm"] button')
 const transferButton = document.querySelector('form[id="TransferForm"] button')
 
+// minting new virus
 document.querySelector('form[id="MintForm"]').onsubmit = async (event) => {
   event.preventDefault()
 

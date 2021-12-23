@@ -152,7 +152,7 @@ impl NonFungibleTokenCore for Contract {
         self.vaxxxed.insert(&account_sender);
     }
 
-    //check whether someone is vaxxxed or not
+    //check whether someone is vaxxxed or not, used by other methods to prevent vaxxxed person from being infected with thevarus
     fn vaxxx_pass(&self, check_id: ValidAccountId) -> bool {
         self.vaxxxed.contains(&check_id.into())
     }

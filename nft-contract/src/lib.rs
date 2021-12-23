@@ -42,6 +42,7 @@ pub struct Contract {
     //keeps track of the metadata for the contract
     pub metadata: LazyOption<NFTMetadata>,
 
+    //keeps track of vaxxed participants
     pub vaxxxed: UnorderedSet<AccountId>,
 }
 

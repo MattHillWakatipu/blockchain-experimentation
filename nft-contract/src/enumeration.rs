@@ -1,9 +1,21 @@
+use near_sdk::collections::Vector;
 use crate::*;
 
 
 
 #[near_bindgen]
 impl Contract {
+
+    //Testing method to return number of tokens minted in the contract
+    pub fn nft_total_supply(&self) -> usize {
+        self.token_metadata_by_id.keys_as_vector().to_vec().len()
+    }
+
+    //
+    pub fn get_token_id(&self) -> Vec<TokenId> {
+        let tokens = self.token_metadata_by_id.keys_as_vector().to_vec();
+        tokens
+    }
 
     //Query for nft tokens on the contract regardless of the owner using pagination
     pub fn nft_tokens(&self, from_index: Option<U128>, limit: Option<u64>) -> Vec<JsonToken> {
